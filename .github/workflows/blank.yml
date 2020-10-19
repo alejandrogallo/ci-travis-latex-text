@@ -6,8 +6,7 @@ name: CI
 # events but only for the master branch
 on:
   push:
-    tags:
-      - "*"
+    branches: [master]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -29,6 +28,9 @@ jobs:
       run: nix-shell --run 'pdflatex main.tex'
 
     - id: create_release
+      on:
+        tags:
+          - "*"
       name: "Create release"
       uses: actions/create-release@v1
       env:
@@ -39,6 +41,9 @@ jobs:
         tag_name: ${{ github.ref }}
         release_name: Release ${{ github.ref }}
     - name: Upload Release Asset
+      on:
+        tags:
+          - "*"
       id: upload-release-asset
       uses: actions/upload-release-asset@v1
       env:
